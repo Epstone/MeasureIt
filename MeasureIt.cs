@@ -608,20 +608,6 @@ static class MeasureIt
                 }
             });
 
-            timer1000.Measure("aIntPtr[i] = 1", 10, delegate
-            {
-                aIntPtr[0] = aInt;
-                aIntPtr[1] = aInt;
-                aIntPtr[2] = aInt;
-                aIntPtr[3] = aInt;
-                aIntPtr[4] = aInt;
-                aIntPtr[5] = aInt;
-                aIntPtr[6] = aInt;
-                aIntPtr[7] = aInt;
-                aIntPtr[8] = aInt;
-                aIntPtr[9] = aInt;
-            });
-
             timer1000.Measure("string[i] = aString", 10, delegate
             {
                 aStringArray[0] = aString;
@@ -1471,6 +1457,75 @@ static class MeasureIt
             });
 #endif
     }
+
+
+    static public void MeasureTimer()
+    {
+        var tenSec = TimeSpan.FromSeconds(10);
+        Timer timer = new Timer(state => { }, null, tenSec, tenSec);
+
+        timer1000.Measure("Timer reset with timespan", 10, delegate
+        {
+            timer.Change(tenSec, tenSec);
+            timer.Change(tenSec, tenSec);
+            timer.Change(tenSec, tenSec);
+            timer.Change(tenSec, tenSec);
+            timer.Change(tenSec, tenSec);
+            timer.Change(tenSec, tenSec);
+            timer.Change(tenSec, tenSec);
+            timer.Change(tenSec, tenSec);
+            timer.Change(tenSec, tenSec);
+            timer.Change(tenSec, tenSec);
+        });
+
+        timer1000.Measure("Timer reset with ints", 10, delegate
+        {
+            timer.Change(10, 10);
+            timer.Change(10, 10);
+            timer.Change(10, 10);
+            timer.Change(10, 10);
+            timer.Change(10, 10);
+            timer.Change(10, 10);
+            timer.Change(10, 10);
+            timer.Change(10, 10);
+            timer.Change(10, 10);
+            timer.Change(10, 10);
+        });
+    }
+
+    static public void MeasureGetTickCount()
+    {
+        ulong result = 0;
+        int result2 = 0;
+        timer1000.Measure("GetTickCount64", 10, delegate
+        {
+          result =  NativeMethods.GetTickCount64();
+          result =  NativeMethods.GetTickCount64();
+          result =  NativeMethods.GetTickCount64();
+          result =  NativeMethods.GetTickCount64();
+          result =  NativeMethods.GetTickCount64();
+          result =  NativeMethods.GetTickCount64();
+          result =  NativeMethods.GetTickCount64();
+          result =  NativeMethods.GetTickCount64();
+          result =  NativeMethods.GetTickCount64();
+          result =  NativeMethods.GetTickCount64();
+        });
+
+        timer1000.Measure("Environment.TickCount", 10, delegate
+        {
+            result2 = Environment.TickCount;
+            result2 = Environment.TickCount;
+            result2 = Environment.TickCount;
+            result2 = Environment.TickCount;
+            result2 = Environment.TickCount;
+            result2 = Environment.TickCount;
+            result2 = Environment.TickCount;
+            result2 = Environment.TickCount;
+            result2 = Environment.TickCount;
+            result2 = Environment.TickCount;
+        });
+    }
+
     static public void MeasureVarags()
     {
         // This is the standard way in C# to pass a variable number of parameters. Because an array
